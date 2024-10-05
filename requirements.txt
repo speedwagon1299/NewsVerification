@@ -1,0 +1,4 @@
+datasets
+peft
+keybert
+spacy
