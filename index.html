@@ -4,10 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Analyzer Website</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .wrapper {
+            background: url(background2.jpg) no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+        }
+        .second {
+            background: url(background3.jpg) no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+        }
+        .icon {
+            width: 100px;
+            height: auto;
+        }
+        .search-bar {
+            padding: 15px;
+            width: 400px;
+            border: 2px solid #ccc;
+            border-radius: 25px; 
+            font-size: 18px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+        .wrapper .center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: sans-serif;
+            user-select: none;
+        }
+        .center h1 {
+            font-size: 60px;
+            font-weight: bold;
+            width: 900px;
+            text-align: center;
+        }
+        .center .search {
+            margin: 35px auto;
+            text-align: center;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 50px;
+            text-align: center;
+            padding: 50px 100px;
+            font-weight: bold;
+            user-select: none;
+        }
+        .facts {
+            margin-top: 10px;
+            margin-left: 20px;
+            font-size: 30px;
+            text-align: left;
+            padding: 10px 150px;
+        }
+        .navsearch {
+            display: flex;
+            justify-content: center;
+        }
+        .navbar {
+            height: 80px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        #loading-text {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            display: none; /* Initially hidden */
+        }
+    </style>
 </head>
 <body>
     <main>
+        <!-- Fake News Analyzer Section -->
         <section class="Front">
             <div class="wrapper">
                 <div class="center">
@@ -16,13 +99,13 @@
                     </h1>
                     <div class="search">
                         <input type="text" id="searchInput" placeholder="Search..." class="search-bar">
+                        <div id="loading-text">Loading</div> <!-- Loading animation hidden initially -->
                     </div>
                 </div>
             </div>
         </section>
         <section id="second" class="second">
             <nav class="navbar">
-                <!--<img class="icon2" src="icon2.png">-->
                 <div class="navsearch">
                     <input type="text" id="searchInput2" placeholder="Search..." class="search-bar">
                 </div>
@@ -30,7 +113,8 @@
             <div id="result" class="result"></div>
             <div id="facts" class="facts"></div>
         </section>
-        <script src="script.js"></script>
     </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
