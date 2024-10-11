@@ -35,7 +35,7 @@ function searchWebsite(event) {
     }
 }
 
-let statusMessages = ["Loading", "Analyzing", "Extracting"];
+let statusMessages = ["Loading", "Analyzing", "Extracting","Comparing","Finalizing"];
 let statusIndex = 0;
 let dotCount = 0;
 
