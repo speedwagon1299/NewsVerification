@@ -1,0 +1,12 @@
+spacy==3.5.4
+coreferee==1.4.1
+numpy==1.23.5
+fastapi
+uvicorn
+transformers
+peft
+torch
+azureml-core
+beautifulsoup4
+readability-lxml
+lxml_html_clean

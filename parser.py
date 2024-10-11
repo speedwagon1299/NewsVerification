@@ -2,7 +2,7 @@ import requests
 from readability import Document
 from bs4 import BeautifulSoup
 
-url = 'https://economictimes.indiatimes.com/news/defence/israels-secret-weapon-against-iran-can-be-a-deadly-option/articleshow/113915122.cms'
+url = 'https://www.news18.com/elections/congress-could-have-won-inside-details-of-what-rahul-gandhi-said-at-haryana-poll-debacle-review-meet-9082312.html'
 response = requests.get(url)
 
 # Parse the article content using Readability
