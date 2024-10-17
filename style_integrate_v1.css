@@ -1,0 +1,86 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+.wrapper {
+    background: url(background2.jpg) no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+.second {
+    background: url(background3.jpg) no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
+.icon {
+    width: 100px;
+    height: auto;
+}
+.search-bar {
+    padding: 15px;
+    width: 400px;
+    border: 2px solid #ccc;
+    border-radius: 25px; 
+    font-size: 18px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+.wrapper .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: sans-serif;
+    user-select: none;
+}
+.center h1 {
+    font-size: 60px;
+    font-weight: bold;
+    width: 900px;
+    text-align: center;
+}
+.center .search {
+    margin: 35px 220px;
+}
+.result {
+    margin-top: 20px;
+    font-size: 50px;
+    text-align: center; /* Center the text */
+    padding: 50px 100px;
+    font-weight: bold;
+    user-select: none;
+}
+.facts {
+    margin-top: 20px; /* Increased margin for spacing */
+    margin-left: 20px;
+    font-size: 30px;
+    text-align: left; /* Align the text */
+    padding: 10px 150px;
+    position: relative; /* Positioning for the arrow */
+}
+.arrow {
+    display: inline-block;
+    margin-right: 10px; /* Space between arrow and text */
+    font-size: 1em; /* Adjust size of the arrow */
+    transition: transform 0.3s; /* Smooth transition for rotation */
+    cursor: pointer; /* Indicate clickable */
+}
+.body-text {
+    display: none; /* Initially hide the body text */
+    margin-left: 40px; /* Indent the body text */
+    font-size: 20px;
+}
+.fact-item {
+    margin-bottom: 20px; /* Increased space between points */
+}
+.navsearch {
+    display: flex; /* Use flexbox for navsearch */
+    justify-content: center; /* Center the search input */
+}
+.navbar {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+}
