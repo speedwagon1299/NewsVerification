@@ -49,27 +49,36 @@
     font-weight: bold;
     user-select: none;
 }
-/*.icon2{
-    width:140px;
-    height: auto;
-    padding:20px 100px;
-}*/
-.facts{
-    margin-top: 10px;
+.facts {
+    margin-top: 20px; /* Increased margin for spacing */
     margin-left: 20px;
     font-size: 30px;
-    text-align: left; /* Center the text */
+    text-align: left; /* Align the text */
     padding: 10px 150px;
-    /*font-weight: bold;*/
+    position: relative; /* Positioning for the arrow */
 }
-
+.arrow {
+    display: inline-block;
+    margin-right: 10px; /* Space between arrow and text */
+    font-size: 1em; /* Adjust size of the arrow */
+    transition: transform 0.3s; /* Smooth transition for rotation */
+    cursor: pointer; /* Indicate clickable */
+}
+.body-text {
+    display: none; /* Initially hide the body text */
+    margin-left: 40px; /* Indent the body text */
+    font-size: 20px;
+}
+.fact-item {
+    margin-bottom: 20px; /* Increased space between points */
+}
 .navsearch {
     display: flex; /* Use flexbox for navsearch */
     justify-content: center; /* Center the search input */
 }
-.navbar{
+.navbar {
     height: 80px;
-    width:100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
