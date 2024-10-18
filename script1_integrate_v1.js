@@ -1,3 +1,7 @@
+let factsList = []; // Declare factsList globally
+let currentFactIndex = 0; // Track which fact is currently being typed
+let verifyDictionary = {};
+
 function type(text, element, speed = 100) {
     let index = 0;
     element.innerText = ''; // Clear previous text
@@ -13,7 +17,7 @@ function type(text, element, speed = 100) {
     typeNextChar(); // Start the typing effect
 }
 
-async function postDataSummarize(url_text, factsList, verifyDictionary) {
+async function postDataSummarize(url_text) {
     // Define the JSON data to be sent
     const data = {
         text: url_text, //variable
@@ -34,7 +38,7 @@ async function postDataSummarize(url_text, factsList, verifyDictionary) {
         // Parse the response as JSON
         const result = await response.json();
         factsList=result.resolved_facts;
-        postDataVerifier(factsList,verifyDictionary);
+        postDataVerifier();
 
         /* 
         // Log the received result
@@ -62,7 +66,7 @@ async function postDataSummarize(url_text, factsList, verifyDictionary) {
     }
 }
 
-async function postDataVerifier(factList,dictionary) {
+async function postDataVerifier() {
     // Define the JSON data to be sent
     const data = {
         text: factList, //variable
@@ -130,8 +134,8 @@ async function postDataVerifier(factList,dictionary) {
 
         results.fact_verification_results.forEach(result => {
         const fact = result.fact;
-        if (!dictionary[fact]) {
-            dictionary[fact] = []; // Start with an empty array for the fact
+        if (!verifyDictionary[fact]) {
+            verifyDictionary[fact] = []; // Start with an empty array for the fact
         }
 
         // Create a new entry for the current result
@@ -144,7 +148,7 @@ async function postDataVerifier(factList,dictionary) {
         };
 
         // Push the new entry to the list for the corresponding fact
-        dictionary[fact].push(entry);
+        verifyDictionary[fact].push(entry);
     });
         
 
@@ -161,8 +165,8 @@ function searchwebsite(event) {
         const nextSection = document.getElementById('second');
         const factDiv = document.getElementById('facts');
         //const factsList = ['1. List', '2. Testing', '3. Okay done'];
-        const factsList = [];
-        const currentFactIndex = 0; // Initialize index for new search
+        //const factsList = [];
+        currentFactIndex = 0; // Initialize index for new search
 
         // Clear the input field and previous facts
         event.target.value = '';
@@ -173,17 +177,18 @@ function searchwebsite(event) {
             return; // Exit if no input
         } else {
             resultDiv.innerText = `${searchInput}`; // Display search term
-            const verifyDictionary={};
-            postDataSummarize(`${searchInput}`, factsList,verifyDictionary); 
+            //const verifyDictionary={};
+            postDataSummarize(`${searchInput}`); 
         }
         nextSection.scrollIntoView({ behavior: 'smooth' });
 
+        //type(
         // Start typing the first fact
-        typeNextFact(currentFactIndex, factsList,verifyDictionary);
+        typeNextFact(currentFactIndex);
     }
 }
 
-function typeNextFact(currentFactIndex, factsList,verifyDictionary) {
+function typeNextFact(currentFactIndex) {
     if (currentFactIndex < factsList.length) {
         const fact = factsList[currentFactIndex];
         const factItem = document.createElement('div');
