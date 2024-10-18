@@ -1,77 +1,119 @@
 * {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
 }
+
+body, html {
+    overflow: hidden;
+    height: 100%;
+    font-family: sans-serif;
+}
+
+.wrapper, .second {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
 .wrapper {
-    background: url(background2.jpg) no-repeat;
+    background: url(background2.jpg) no-repeat center center fixed;
     background-size: cover;
-    height: 100vh;
+    z-index: 2;
 }
+
 .second {
-    background: url(background3.jpg) no-repeat;
+    background: url(background3.jpg) no-repeat center center fixed;
     background-size: cover;
-    height: 100vh;
+    transform: translateY(100%);
+    z-index: 1;
 }
+
 .icon {
     width: 100px;
     height: auto;
+    vertical-align: middle;
 }
+
 .search-bar {
     padding: 15px;
-    width: 400px;
+    width: 600px;
     border: 2px solid #ccc;
-    border-radius: 25px; 
-    font-size: 18px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    border-radius: 25px;
+    font-size: 18px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: block;
 }
+
 .wrapper .center {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: sans-serif;
+    text-align: center;
     user-select: none;
 }
+
 .center h1 {
     font-size: 60px;
     font-weight: bold;
     width: 900px;
-    text-align: center;
+    margin-bottom: 35px;
 }
-.center .search {
-    margin: 35px 220px;
-}
+
 .result {
     margin-top: 20px;
     font-size: 50px;
-    text-align: center; /* Center the text */
+    text-align: center;
     padding: 50px 100px;
     font-weight: bold;
     user-select: none;
 }
-/*.icon2{
-    width:140px;
-    height: auto;
-    padding:20px 100px;
-}*/
-.facts{
-    margin-top: 10px;
+
+.facts {
+    margin-top: 20px;
     margin-left: 20px;
     font-size: 30px;
-    text-align: left; /* Center the text */
+    text-align: left;
     padding: 10px 150px;
-    /*font-weight: bold;*/
+}
+
+.arrow {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1em;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.body-text {
+    display: none;
+    margin-left: 40px;
+    font-size: 20px;
+}
+
+.fact-item {
+    margin-bottom: 20px;
 }
 
 .navsearch {
-    display: flex; /* Use flexbox for navsearch */
-    justify-content: center; /* Center the search input */
-}
-.navbar{
-    height: 80px;
-    width:100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.4);
+    padding-top: 20px;
+}
+
+.status-bar {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    height: 30px;
+    width: 100%;
+    padding: 10px 0;
+    transition: opacity 0.5s;
+    margin-top: 10px;
 }

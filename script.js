@@ -1,58 +1,138 @@
-document.getElementById('searchInput2').addEventListener('keydown', searchWebsite);
-document.getElementById('searchInput').addEventListener('keydown', searchWebsite);
+document.getElementById('searchInput2').addEventListener('keydown', searchwebsite);
+document.getElementById('searchInput').addEventListener('keydown', searchwebsite);
 
-function searchWebsite(event) {
+function type(text, element, speed = 100) {
+    let index = 0;
+    element.innerText = '';
+
+    function typeNextChar() {
+        if (index < text.length) {
+            const char = text.charAt(index);
+            element.innerText += char === ' ' ? '\u00A0' : char;
+            index++;
+            setTimeout(typeNextChar, speed);
+        }
+    }
+
+    typeNextChar();
+}
+
+function searchwebsite(event) {
     if (event.key === 'Enter') {
+        event.preventDefault();
         const searchInput = event.target.value;
         const resultDiv = document.getElementById('result');
-        const nextSection = document.getElementById('second');
         const factDiv = document.getElementById('facts');
-        const loadingTextElement = document.getElementById('loading-text');
+        const statusBar = event.target.id === 'searchInput' ? document.getElementById('statusBar') : document.getElementById('statusBar2');
+        const wrapper = document.querySelector('.wrapper');
+        const second = document.querySelector('.second');
 
-        // Clear the input field after submitting
         event.target.value = '';
+        factDiv.innerHTML = '';
+        statusBar.innerText = '';
 
         if (searchInput.trim() === "") {
             resultDiv.innerText = "Please enter a search term.";
         } else {
-            // Show the loading animation after the user presses Enter
-            loadingTextElement.style.display = "block";
-            updateStatusText();
-
-            // Simulate processing delay (e.g., analyzing or fetching data)
-            setTimeout(function () {
-                loadingTextElement.style.display = "none"; // Hide the loading animation after processing
-                resultDiv.innerText = `You searched for: ${searchInput}`; // Display the search input on the page
-
-                // After processing is done, now scroll to the second section
-                nextSection.scrollIntoView({ behavior: 'smooth' });
-
-                // Display sample facts list
-                factDiv.innerText = "1. List\n2. Testing\n3. Okay done";
-
-            }, 3000); // Assume 3 seconds for processing (adjust as needed)
+            resultDiv.innerText = `${searchInput}`;
+            resultDiv.style.textAlign = "center";
         }
+
+        const stages = ["Loading", "Analyzing", "Extracting", "Comparing", "Concluding"];
+        let currentStage = 0;
+
+        function showNextStage() {
+            if (currentStage < stages.length) {
+                const stageText = stages[currentStage];
+                let dots = '';
+
+                let dotInterval = setInterval(() => {
+                    if (dots.length < 3) {
+                        dots += '.';
+                    } else {
+                        dots = '';
+                    }
+                    statusBar.innerText = stageText + dots;
+                }, 500);
+
+                setTimeout(() => {
+                    clearInterval(dotInterval);
+                    currentStage++;
+                    showNextStage();
+                }, 2000);
+            } else {
+                setTimeout(() => {
+                    statusBar.innerText = 'Search completed!';
+                    setTimeout(() => {
+                        statusBar.innerText = '';
+                    }, 2000);
+                }, 1000);
+            }
+        }
+
+        showNextStage();
+
+        const factsList = ['1. List', '2. Testing', '3. Okay done'];
+        let currentFactIndex = 0;
+
+        function typeNextFact() {
+            if (currentFactIndex < factsList.length) {
+                const fact = factsList[currentFactIndex];
+                const factItem = document.createElement('div');
+                factItem.className = 'fact-item';
+
+                const arrow = document.createElement('span');
+                arrow.className = 'arrow';
+                arrow.textContent = '➤';
+
+                const headingText = document.createElement('span');
+                headingText.className = 'heading-text';
+
+                const bodyText = document.createElement('div');
+                bodyText.className = 'body-text';
+                bodyText.style.display = 'none';
+
+                type(fact, headingText, 100);
+
+                const bodyTextContent = `Details about ${fact}`;
+                bodyText.innerText = bodyTextContent;
+
+                factItem.appendChild(arrow);
+                factItem.appendChild(headingText);
+                factItem.appendChild(bodyText);
+                factDiv.appendChild(factItem);
+
+                arrow.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const allBodyTexts = document.querySelectorAll('.body-text');
+                    const allArrows = document.querySelectorAll('.arrow');
+
+                    allBodyTexts.forEach((text, index) => {
+                        if (text !== bodyText) {
+                            text.style.display = 'none';
+                            allArrows[index].style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    const isVisible = bodyText.style.display === 'block';
+                    bodyText.style.display = isVisible ? 'none' : 'block';
+                    arrow.style.transform = isVisible ? 'rotate(0deg)' : 'rotate(90deg)';
+
+                    if (!isVisible) {
+                        type(bodyTextContent, bodyText, 100);
+                    }
+                });
+
+                currentFactIndex++;
+                setTimeout(typeNextFact, 1000);
+            }
+        }
+
+        setTimeout(() => {
+            wrapper.style.transform = 'translateY(-100%)';
+            second.style.transform = 'translateY(0)';
+            
+            setTimeout(typeNextFact, 500);
+        }, stages.length * 2000 + 1000);
     }
-}
-
-let statusMessages = ["Loading", "Analyzing", "Extracting","Comparing","Finalizing"];
-let statusIndex = 0;
-let dotCount = 0;
-
-function updateStatusText() {
-    let loadingTextElement = document.getElementById("loading-text");
-
-    // Update status message and dots
-    let dots = ".".repeat(dotCount); // Add 1, 2, or 3 dots
-    loadingTextElement.innerHTML = statusMessages[statusIndex] + dots;
-
-    // Update dots (cycle through 0, 1, 2, 3 dots)
-    dotCount = (dotCount + 1) % 4;
-
-    // Update status message every 6 seconds (2000 ms * 3 cycles)
-    if (dotCount === 0) {
-        statusIndex = (statusIndex + 1) % statusMessages.length; // Cycle through messages
-    }
-
-    setTimeout(updateStatusText, 500); // Update every 500ms for smoother dots animation
 }
