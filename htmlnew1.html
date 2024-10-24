@@ -1,0 +1,218 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>News Analyzer Website</title>
+        <link rel="stylesheet" href="css_n_v1.css" />
+    </head>
+    <body>
+        <main>
+            <section id="home" class="Front">
+                <div class="wrapper">
+                    <div class="center">
+                        <h1>
+                            <img class="icon" src="icon2.png" alt="Icon" />
+                            VeriFacts
+                        </h1>
+                        <div class="search">
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search..."
+                                class="search-bar"
+                            />
+                            <div id="statusBar" class="status-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="second" class="second">
+                <nav class="navbar">
+                    <div class="navsearch">
+                        <input
+                            type="text"
+                            id="searchInput2"
+                            placeholder="Search..."
+                            class="search-bar"
+                        />
+                    </div>
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#third" id="aboutUsLink">About Us</a></li>
+                        <li><a href="#fourth">Working</a></li>
+                    </ul>
+                </nav>
+                <div id="result" class="result"></div>
+                <div id="url_searched" class="url_searched"></div>
+                <div id="facts" class="facts"></div>
+                <div id="verify" class="verify"></div>
+            </section>
+            <section id="third" class="third">
+                <div class="About-Details">
+                    <br />
+                    <br />
+                    <h2 class="Title">About Us</h2>
+                    <p class="Text">
+                        Our News Verification project was developed by a team of
+                        four students—Srihari, Nakshatra, Hima, and Aryan—who
+                        came together to tackle the challenge of misinformation.
+                        <br />
+                        Srihari built an ML model to extract key facts from
+                        user-submitted article URLs and integrated the entire
+                        backend system. <br />
+                        Aryan's model analyzes these facts by searching relevant
+                        articles to verify if the information is supported,
+                        contradicted, or inconclusive. <br />
+                        Nakshatra focused on core frontend development and
+                        integration with the ML models. <br />
+                        Hima crafted the website’s styling, ensuring a
+                        user-friendly experience. Together, we deliver a
+                        seamless fact-checking tool.
+                    </p>
+                </div>
+            </section>
+            <section id="fourth" class="fourth">
+                <div class="About-Details">
+                    <br />
+                    <br />
+                    <h2 class="Title">Working</h2>
+                    <p class="Text">
+                        In our News Verification project, there are two Large
+                        Language models used to effectively produce the desired
+                        output of facts and reasonable validation. <br />
+                        1. User begins by entering the URL of an article they
+                        want to verify. <br />
+                        2. The first model, a PEGASUS model finetuned using Low
+                        Rank Adaptation (LoRA), generates facts from the
+                        article, identifying key claims made.
+                        <br />
+                        3. After postprocessing, these facts are sent to the
+                        second stage. For each fact, upto 5 relevant searches
+                        are found.<br />
+                        Each fact is tested against the contents of each similar
+                        article through an uncased DistilBERT model finetuned on
+                        Multi-Genre Natural Language Inference (MNLI), which
+                        analyzes the content of these articles and checks
+                        whether the extracted facts are supported, contradicted,
+                        or inconclusive. <br />
+                        4. The results are then presented to the user, providing
+                        a clear indication of the factual accuracy of the
+                        original article.
+                    </p>
+                </div>
+            </section>
+            <script src="js_n_v1.js"></script>
+        </main>
+    </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>News Analyzer Website</title>
+        <link rel="stylesheet" href="css_n_v1.css" />
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="navsearch">
+                <input
+                    type="text"
+                    id="searchInput2"
+                    placeholder="Search..."
+                    class="search-bar"
+                />
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#third" id="aboutUsLink">About Us</a></li>
+                <li><a href="#fourth">Working</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="home" class="Front">
+                <div class="wrapper">
+                    <div class="center">
+                        <h1>
+                            <img class="icon" src="icon2.png" alt="Icon" />
+                            VeriFacts
+                        </h1>
+                        <div class="search">
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search..."
+                                class="search-bar"
+                            />
+                            <div id="statusBar" class="status-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="second" class="second">
+                <div id="result" class="result"></div>
+                <div id="url_searched" class="url_searched"></div>
+                <div id="facts" class="facts"></div>
+                <div id="verify" class="verify"></div>
+            </section>
+            <section id="third" class="third">
+                <div class="About-Details">
+                    <br />
+                    <br />
+                    <h2 class="Title">About Us</h2>
+                    <p class="Text">
+                        Our News Verification project was developed by a team of
+                        four students—Srihari, Nakshatra, Hima, and Aryan—who
+                        came together to tackle the challenge of misinformation.
+                        <br />
+                        Srihari built an ML model to extract key facts from
+                        user-submitted article URLs and integrated the entire
+                        backend system. <br />
+                        Aryan's model analyzes these facts by searching relevant
+                        articles to verify if the information is supported,
+                        contradicted, or inconclusive. <br />
+                        Nakshatra focused on core frontend development and
+                        integration with the ML models. <br />
+                        Hima crafted the website’s styling, ensuring a
+                        user-friendly experience. Together, we deliver a
+                        seamless fact-checking tool.
+                    </p>
+                </div>
+            </section>
+            <section id="fourth" class="fourth">
+                <div class="About-Details">
+                    <br />
+                    <br />
+                    <h2 class="Title">Working</h2>
+                    <p class="Text">
+                        In our News Verification project, there are two Large
+                        Language models used to effectively produce the desired
+                        output of facts and reasonable validation. <br />
+                        1. User begins by entering the URL of an article they
+                        want to verify. <br />
+                        2. The first model, a PEGASUS model finetuned using Low
+                        Rank Adaptation (LoRA), generates facts from the
+                        article, identifying key claims made.
+                        <br />
+                        3. After postprocessing, these facts are sent to the
+                        second stage. For each fact, upto 5 relevant searches
+                        are found.<br />
+                        Each fact is tested against the contents of each similar
+                        article through an uncased DistilBERT model finetuned on
+                        Multi-Genre Natural Language Inference (MNLI), which
+                        analyzes the content of these articles and checks
+                        whether the extracted facts are supported, contradicted,
+                        or inconclusive. <br />
+                        4. The results are then presented to the user, providing
+                        a clear indication of the factual accuracy of the
+                        original article.
+                    </p>
+                </div>
+            </section>
+        </main>
+        <script src="js_n_v1.js"></script>
+    </body>
+</html>

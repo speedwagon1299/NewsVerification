@@ -1,88 +1,25 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 import torch
-from transformers import PegasusForConditionalGeneration, PegasusTokenizer, AutoModelForSequenceClassification, AutoTokenizer, pipeline
-from peft import PeftModel
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import spacy
-import os
-import httpx
-import requests
-from readability import Document
-from bs4 import BeautifulSoup
-import torch
 from typing import Dict, Any, List
 import requests
+from bs4 import BeautifulSoup
 import concurrent.futures
 import hashlib
-from fastapi.middleware.cors import CORSMiddleware
+import time
 import logging
-
-app = FastAPI()
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows requests from any origin; restrict it to specific domains if needed
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all HTTP methods
-    allow_headers=["*"],  # Allows all headers
-)
-
-# Initialize spaCy model and coreferee
-nlp = spacy.load('en_core_web_md')
-nlp.add_pipe('coreferee')
-
-# Define the device (use GPU if available)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Define the local model path
-local_model_path = os.path.join("/home/azureuser/cloudfiles/data","lora-pegasus-model")
-
-# Load the pre-trained tokenizer and the fine-tuned LoRA model
-tokenizer = PegasusTokenizer.from_pretrained('google/pegasus-large')
-base_model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-large").to(device)
-lora_model = PeftModel.from_pretrained(base_model, local_model_path).to(device)
-
-
-class TextRequest(BaseModel):
-    text: str
-    max_length: int = 128
-    num_beams: int = 5
-
-def replace_coreferences_to_list(text):
-    # Process the input text with spaCy and coreferee
-    doc = nlp(text)
-    resolved_sentences = []
-    current_sentence = ""
-
-    for token in doc:
-        # Resolve the coreference of the token if available
-        repres = doc._.coref_chains.resolve(token)
-        if repres:
-            # Join the resolved tokens with 'and' if multiple tokens are resolved, then add to current_sentence
-            current_sentence += " " + " and ".join([t.text for t in repres])
-        else:
-            current_sentence += " " + token.text
-
-        # If the token is the end of a sentence, add the current sentence to the list
-        if token.is_sent_end:
-            resolved_sentences.append(current_sentence.strip())
-            current_sentence = ""  # Reset for the next sentence
-    
-    return resolved_sentences
-
-
+#class containing logic for fact checking
 class FactChecker:
     def __init__(self):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu") #sets the device to either gpu if available to execute better or CPU otherwise
         
-        # Load the NLI model
+        # Load the NLI model whih will classify the relation between two sentences as supported , contradicted or neutral
         self.nli_model_name = "typeform/distilbert-base-uncased-mnli"
         self.nli_tokenizer = AutoTokenizer.from_pretrained(self.nli_model_name)
         self.nli_model = AutoModelForSequenceClassification.from_pretrained(self.nli_model_name).to(self.device)
         
-        # Load spaCy model for linguistic analysis
-        self.nlp = nlp
+        # Load spaCy model for linguistic analysis which
+        self.nlp = spacy.load("en_core_web_sm")
         
         # Setup cache
         self.cache = {}
@@ -288,89 +225,31 @@ class FactChecker:
         self.logger.info(f"Total results processed: {len(all_results)}")
         return all_results
 
-class URLRequest(BaseModel):
-    url: str
+def main():
+    fact_checker = FactChecker()
+    
+    # Example facts to verify
+    resolved_facts = [
+        "Mentally ill inmates in Miami are housed on the \"forgotten floor\" Judge Steven Leifman says most are there as a result of \"avoidable felonies\"",
+        "Leifman says the system is unjust and he's fighting for change .",
+        "While CNN tours facility, patient shouts: \"I am the son of the president.\""
+    ]
+    
+    # Process facts and measure execution time
+    start_time = time.time()
+    results = fact_checker.process_resolved_facts(resolved_facts)
+    end_time = time.time()
+    
+    # Print results
+    for i, result in enumerate(results, 1):
+        print(f"Result {i}:")
+        print(f"Fact: {result['fact']}")
+        print(f"Source URL: {result['url']}")
+        print(f"Verification Result: {result['verification_result']['result']}")
+        print("---")
+    
+    print(f"Total Execution Time: {end_time - start_time:.2f} seconds")
+    print(f"Total Results: {len(results)}")
 
-@app.post("/fetch-title")
-async def fetch_title(request: URLRequest):
-    try:
-        # Fetch the page using httpx
-        async with httpx.AsyncClient() as client:
-            response = await client.get(request.url)
-        
-        # Raise error if the URL request fails
-        if response.status_code != 200:
-            raise HTTPException(status_code=400, detail="Failed to fetch the URL")
-
-        # Parse the HTML content using BeautifulSoup
-        soup = BeautifulSoup(response.content, "html.parser")
-        title = soup.title.string if soup.title else "No Title Found"
-        
-        return {"title": title}
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/summarize")
-def summarize(request: TextRequest):
-    try:
-        # Tokenize the input text for the model
-        response = requests.get(request.text)
-        doc = Document(response.text)
-        article_html = doc.summary()  # Extract HTML of the main article content
-
-        # Use BeautifulSoup to clean up the HTML and extract plain text
-        soup = BeautifulSoup(article_html, 'html.parser')
-        article_text = soup.get_text()
-        inputs = tokenizer(
-            article_text,
-            max_length=512,
-            truncation=True,
-            return_tensors="pt"
-        ).to(device)
-
-        # Generate the summary using the model
-        with torch.no_grad():
-            output = lora_model.generate(
-                **inputs,
-                max_length=request.max_length,
-                num_beams=request.num_beams,
-                early_stopping=True
-            )
-
-        # Decode the generated summary
-        summary = tokenizer.decode(output[0], skip_special_tokens=True)
-
-        # Process the summary with coreference resolution
-        resolved_sentences = replace_coreferences_to_list(summary)
-        
-        # The resolved sentences can be sent back as a list of facts or joined into a single response.
-        return {
-            "summary": summary,
-            "resolved_facts": resolved_sentences  # List of individual factual statements
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-class VerifyRequest(BaseModel):
-    resolved_facts: List[str]
-
-@app.post("/verify")
-def verify(request: VerifyRequest):
-    try:
-        # Call the fact-checking functionality (reuse the FactChecker class)
-        fact_checker = FactChecker()
-        results = fact_checker.process_resolved_facts(request.resolved_facts)
-        
-        # Return the verification results
-        return {
-            "fact_verification_results": results
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/health")
-def health_check():
-    return {"status": "Model is running"}
+if __name__ == "__main__":
+    main()
